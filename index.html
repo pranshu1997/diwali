@@ -136,6 +136,7 @@
     <a class="btn ride" target="_blank" rel="noopener" href="https://rapido.bike/">Rapido</a>
   </div>
   <div class="row"><button class="btn wide" id="copy" type="button">Copy address</button></div>
+  <div class="row"><button class="btn wide" id="copy-landmark" type="button">Copy landmark for other ride apps</button></div>
 
   <h2>Find the house</h2>
   <ol>
@@ -183,6 +184,7 @@
 
 <script>
 const ADDRESS = 'First Floor, SR-6, Sector Road, Malibu Towne, Sector 47, Gurgaon';
+const LANDMARK = 'Housr Malibu Towne, Sector 47, Gurgaon';
 const $ = (s) => document.querySelector(s);
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -250,11 +252,12 @@ function toast(text) {
   t.textContent = text; t.classList.add('on');
   clearTimeout(timer); timer = setTimeout(() => t.classList.remove('on'), 2600);
 }
-async function copy(text) {
-  try { await navigator.clipboard.writeText(ADDRESS); toast(text); }
+async function copy(message, value = ADDRESS) {
+  try { await navigator.clipboard.writeText(value); toast(message); }
   catch { toast('Copy failed. Hold the address to copy it.'); }
 }
 $('#copy').addEventListener('click', () => copy('Address copied. You have no excuse now.'));
+$('#copy-landmark').addEventListener('click', () => copy('Landmark copied. Get off at Housr and walk back 2 buildings.', LANDMARK));
 document.querySelectorAll('.ride').forEach((a) =>
   a.addEventListener('click', () => copy('Address copied. Your driver will still call to ask where you are.')));
 </script>
