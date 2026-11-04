@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//diwali-invite//EN
+BEGIN:VEVENT
+UID:diwali-20261106@pranshu1997.github.io
+DTSTAMP:20261104T070000Z
+DTSTART:20261106T143000Z
+DTEND:20261106T183000Z
+SUMMARY:Housewarming + Diwali party
+LOCATION:First Floor\, SR-6\, Sector Road\, Malibu Towne\, Sector 47\, Gurgaon
+DESCRIPTION:Food\, drinks\, music\, dancing\, games and lights. Third last building on the street\, 2 buildings before Housr. Look for the bronze-gold main gate. Invite: https://pranshu1997.github.io/diwali/
+END:VEVENT
+END:VCALENDAR
