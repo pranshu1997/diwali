@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Housewarming + Diwali. You're invited.</title>
+<meta name="description" content="We got a new house and Diwali showed up. Tap the diya to open your invite.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Housewarming + Diwali. You're invited.">
+<meta property="og:description" content="Tap the diya to open your invite.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://pranshu1997.github.io/diwali/og.png">
+<meta name="theme-color" content="#1c0a26">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&family=Yatra+One&display=swap" rel="stylesheet">
+<script>document.documentElement.className = 'js'</script>
+<style>
+  :root {
+    --night: #1c0a26;
+    --plum: #33143f;
+    --marigold: #ffb01f;
+    --pink: #ff4f8b;
+    --ivory: #fff4dc;
+    --muted: #d9c6d8;
+    --bronze: #d9a15b;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--night); }
+  body {
+    margin: 0; min-height: 100dvh; color: var(--ivory);
+    font: 400 1.125rem/1.55 Mukta, system-ui, sans-serif;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; opacity: 0;
+    background: radial-gradient(90vmax 70vmax at 50% 9rem, #8a3a1c 0%, #4d1b3c 42%, var(--night) 78%);
+    transition: opacity 1.4s ease;
+  }
+  .lit::before { opacity: 1; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+  .diya-wrap { display: flex; flex-direction: column; align-items: center; padding-top: 3rem; transition: padding 1s ease; }
+  .js body:not(.lit) .diya-wrap { padding-top: 28dvh; }
+  #diya {
+    background: none; border: 0; padding: .5rem; cursor: pointer; color: inherit; border-radius: 1rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #diya svg { display: block; width: 9rem; height: auto; }
+  #flame { opacity: 0; transform-origin: 60px 52px; transform: scale(.3); transition: opacity .4s, transform .6s cubic-bezier(.2,1.6,.4,1); }
+  .lit #flame { opacity: 1; transform: scale(1); }
+  .lit #flame path { animation: flicker 1.7s ease-in-out infinite; transform-origin: 60px 52px; }
+  @keyframes flicker { 50% { transform: scale(.93, 1.07) rotate(1.5deg); } }
+  #hint { margin: .75rem 1.5rem 0; color: var(--muted); text-align: center; }
+  .lit #hint { display: none; }
+
+  main { max-width: 34rem; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+  .js main { display: none; }
+  .lit main { display: block; animation: rise 1s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(1rem); } }
+
+  h1, h2 { font-family: "Yatra One", Georgia, serif; font-weight: 400; color: var(--marigold); }
+  h1 { font-size: clamp(2.6rem, 11vw, 3.75rem); line-height: 1.08; margin: 0 0 1rem; text-align: center; outline: 0; text-wrap: balance; }
+  h2 { font-size: 1.625rem; line-height: 1.2; margin: 2.75rem 0 .5rem; }
+  p { margin: 0 0 .75rem; }
+  .intro { text-align: center; font-size: 1.25rem; }
+  .when { text-align: center; color: var(--marigold); font-weight: 600; }
+  address { font-style: normal; font-weight: 600; }
+  ol { margin: .75rem 0 0; padding-left: 1.5rem; }
+  li { margin-bottom: .5rem; padding-left: .25rem; }
+  li::marker { color: var(--marigold); font-weight: 600; }
+  .gate { color: var(--bronze); font-weight: 600; }
+
+  .row { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: .875rem; }
+  .btn {
+    display: inline-block; min-height: 3rem; padding: .625rem 1.125rem; border-radius: 99rem;
+    border: 2px solid var(--marigold); background: transparent; color: var(--ivory);
+    font: 600 1.0625rem/1.5 Mukta, system-ui, sans-serif; text-decoration: none; cursor: pointer; text-align: center;
+  }
+  .btn:hover { background: var(--plum); }
+  .btn.main, .btn[aria-pressed="true"] { background: var(--marigold); color: var(--night); }
+  .rides .btn { flex: 1 1 5.5rem; }
+  .wide { width: 100%; }
+  :focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+
+  #reply { min-height: 1.75rem; margin-top: .75rem; color: var(--marigold); font-weight: 600; }
+  footer { text-align: center; color: var(--muted); font-size: 1rem; margin-top: 3rem; }
+  #toast {
+    position: fixed; left: 50%; bottom: 1.25rem; transform: translate(-50%, 1rem); opacity: 0; visibility: hidden; z-index: 6;
+    width: max-content; max-width: 90vw; padding: .5rem 1.125rem; border-radius: 99rem;
+    background: var(--ivory); color: var(--night); font-weight: 600; transition: transform .25s, opacity .25s, visibility .25s;
+  }
+  #toast.on { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<div class="diya-wrap">
+  <button id="diya" type="button" aria-label="Light the diya">
+    <svg viewBox="0 0 120 110" aria-hidden="true">
+      <g id="flame">
+        <path d="M60 8c11 16 17 26 17 36a17 17 0 0 1-34 0c0-10 6-20 17-36z" fill="#ffb01f"/>
+        <path d="M60 28c5 8 8 13 8 18a8 8 0 0 1-16 0c0-5 3-10 8-18z" fill="#fff4dc"/>
+      </g>
+      <path d="M60 50v14" stroke="#fff4dc" stroke-width="3" stroke-linecap="round"/>
+      <path d="M6 64h108c-4 22-25 38-54 38S10 86 6 64z" fill="#c8552b"/>
+      <path d="M6 64h108c-.5 3-1.4 6-2.6 8.5H8.6C7.4 70 6.5 67 6 64z" fill="#ff4f8b"/>
+      <g fill="#ffb01f"><circle cx="36" cy="84" r="3"/><circle cx="60" cy="90" r="3"/><circle cx="84" cy="84" r="3"/></g>
+    </svg>
+  </button>
+  <p id="hint">Tap the diya. It's the only chore tonight.</p>
+</div>
+
+<main>
+  <h1 tabindex="-1">We got a new house and Diwali showed up.</h1>
+  <p class="intro">Housewarming cum Diwali party. Food, drinks, music, dancing, games and lights.</p>
+  <p class="when" id="when">Date and time: coming to the group chat</p>
+
+  <h2>Where</h2>
+  <address>First Floor, SR-6, Sector Road, Malibu Towne, Sector 47, Gurgaon</address>
+  <div class="row">
+    <a class="btn main wide" href="https://maps.app.goo.gl/xajVRmj5mVRvkta2A" target="_blank" rel="noopener">Open in Google Maps</a>
+  </div>
+  <div class="row rides">
+    <a class="btn ride" target="_blank" rel="noopener" href="https://m.uber.com/ul/?action=setPickup&amp;pickup=my_location&amp;dropoff%5Blatitude%5D=28.4228328&amp;dropoff%5Blongitude%5D=77.0531059&amp;dropoff%5Bnickname%5D=Malibu%20Towne%20SR-6&amp;dropoff%5Bformatted_address%5D=SR-6%2C%20Sector%20Road%2C%20Malibu%20Towne%2C%20Sector%2047%2C%20Gurgaon">Uber</a>
+    <a class="btn ride" target="_blank" rel="noopener" href="https://book.olacabs.com/?serviceType=p2p&amp;drop_lat=28.4228328&amp;drop_lng=77.0531059&amp;drop_name=Malibu%20Towne%20SR-6">Ola</a>
+    <a class="btn ride" target="_blank" rel="noopener" href="https://rapido.bike/">Rapido</a>
+  </div>
+  <div class="row"><button class="btn wide" id="copy" type="button">Copy address</button></div>
+
+  <h2>Find the house</h2>
+  <ol>
+    <li>Get to Sector Road in Malibu Towne.</li>
+    <li>Go to the end of the street. The last building is Housr.</li>
+    <li>Count back 2 buildings from Housr. We are the third last.</li>
+    <li>Look for the <span class="gate">bronze-gold main gate</span>. If the gate looks expensive, you are in the right place.</li>
+    <li>Come up to the first floor. Follow the noise.</li>
+  </ol>
+
+  <h2>What are you wearing?</h2>
+  <p>Ethnic preferred, never enforced. We would rather have you than your kurta.</p>
+  <div class="row" id="outfits">
+    <button class="btn" type="button" aria-pressed="false" data-r="Excellent. You will be in many photos.">Kurta</button>
+    <button class="btn" type="button" aria-pressed="false" data-r="Excellent. Everyone else now feels underdressed.">Saree or lehenga</button>
+    <button class="btn" type="button" aria-pressed="false" data-r="Come in. The gate is bronze, not judgemental.">Jeans, but festive</button>
+    <button class="btn" type="button" aria-pressed="false" data-r="Normal. Decide when you see the party photos.">No idea yet</button>
+  </div>
+  <p id="reply" aria-live="polite"></p>
+
+  <h2>Drinks</h2>
+  <p>We have the basics. If you have a favourite, bring it. If you have a request, tell us.</p>
+
+  <h2>Coming?</h2>
+  <p>Pick one. WhatsApp opens with your reply ready. Send it to me.</p>
+  <div class="row">
+    <a class="btn main" target="_blank" rel="noopener" href="https://wa.me/?text=I%27m%20in%20for%20the%20housewarming%20Diwali%20party.%20Save%20me%20some%20food.">I'm in</a>
+    <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=I%27m%20in%20for%20the%20housewarming%20Diwali%20party%2C%20and%20I%27m%20bringing%20a%20bottle.">I'm in, with a bottle</a>
+    <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=I%20can%27t%20make%20it%20to%20the%20party.%20Please%20send%20sweets%20and%20photos.">Can't come, send sweets</a>
+  </div>
+
+  <footer id="count">Tap anywhere for a sparkler. No pollution, no burnt fingers.</footer>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script>
+const ADDRESS = 'First Floor, SR-6, Sector Road, Malibu Towne, Sector 47, Gurgaon';
+const $ = (s) => document.querySelector(s);
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Sparks: a short burst wherever the guest taps.
+const sky = $('#sky'), ctx = sky.getContext('2d');
+const COLORS = ['#ffb01f', '#ff4f8b', '#fff4dc', '#ff7a2f'];
+let sparks = [], running = false;
+function size() { sky.width = innerWidth * devicePixelRatio; sky.height = innerHeight * devicePixelRatio; }
+addEventListener('resize', size); size();
+function burst(x, y, n = 36) {
+  if (calm) return;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * 6.283, v = 1 + Math.random() * 5;
+    sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, c: COLORS[i % 4] });
+  }
+  if (!running) { running = true; requestAnimationFrame(frame); }
+}
+function frame() {
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  sparks = sparks.filter((s) => s.life > 0);
+  for (const s of sparks) {
+    s.x += s.vx; s.y += s.vy; s.vy += .09; s.vx *= .98; s.life -= .018;
+    ctx.globalAlpha = Math.max(s.life, 0); ctx.fillStyle = s.c;
+    ctx.beginPath(); ctx.arc(s.x, s.y, 2.2, 0, 6.283); ctx.fill();
+  }
+  if (sparks.length) requestAnimationFrame(frame);
+  else { running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+// Lighting the diya opens the invite.
+$('#diya').addEventListener('click', () => {
+  if (document.body.classList.contains('lit')) return;
+  document.body.classList.add('lit');
+  $('#diya').setAttribute('aria-label', 'Lit diya');
+  $('h1').focus({ preventScroll: true });
+});
+
+// Sparkler counter.
+let lit = 0;
+document.addEventListener('pointerdown', (e) => {
+  if (!document.body.classList.contains('lit') && !e.target.closest('#diya')) return;
+  burst(e.clientX, e.clientY);
+  if (e.target.closest('a, button:not(#diya)')) return;
+  lit++;
+  $('#count').textContent = lit < 15
+    ? `Sparklers lit: ${lit}. Pollution: none. Burnt fingers: none.`
+    : `Sparklers lit: ${lit}. Please save some energy for the dance floor.`;
+});
+
+// Outfit quiz: every answer gets in.
+$('#outfits').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  document.querySelectorAll('#outfits button').forEach((o) => o.setAttribute('aria-pressed', o === b));
+  $('#reply').textContent = b.dataset.r;
+});
+
+// Copy the address. Ride links also copy it, because not every app takes a destination.
+let timer;
+function toast(text) {
+  const t = $('#toast');
+  t.textContent = text; t.classList.add('on');
+  clearTimeout(timer); timer = setTimeout(() => t.classList.remove('on'), 2600);
+}
+async function copy(text) {
+  try { await navigator.clipboard.writeText(ADDRESS); toast(text); }
+  catch { toast('Copy failed. Hold the address to copy it.'); }
+}
+$('#copy').addEventListener('click', () => copy('Address copied. Do not lose it.'));
+document.querySelectorAll('.ride').forEach((a) =>
+  a.addEventListener('click', () => copy('Address copied, in case the app forgets.')));
+</script>
+</body>
+</html>
